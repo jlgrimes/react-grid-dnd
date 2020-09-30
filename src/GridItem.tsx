@@ -9,14 +9,14 @@ import { GridItemContext } from "./GridItemContext";
 
 interface GridItemProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode,
-  dragDisabled: boolean;
+  locked: boolean;
 }
 
 export function GridItem({
   children,
   style,
   className,
-  dragDisabled,
+  locked,
   ...other
 }: GridItemProps) {
   const context = React.useContext(GridItemContext);
@@ -41,8 +41,8 @@ export function GridItem({
   } = context;
 
   let { disableDrag } = context;
-  if (!!dragDisabled) {
-    disableDrag = dragDisabled
+  if (!!locked) {
+    disableDrag = locked
   }
 
   const { columnWidth, rowHeight } = grid;
@@ -78,6 +78,10 @@ export function GridItem({
 
   // handle move updates imperatively
   function handleMove(state: StateType, e: ResponderEvent) {
+    if (locked) {
+      return;
+    }
+    
     const x = startCoords.current[0] + state.delta[0];
     const y = startCoords.current[1] + state.delta[1];
     set({
