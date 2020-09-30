@@ -8,13 +8,15 @@ import { animated, interpolate, useSpring } from "react-spring";
 import { GridItemContext } from "./GridItemContext";
 
 interface GridItemProps extends React.HTMLAttributes<HTMLDivElement> {
-  children: React.ReactNode;
+  children: React.ReactNode,
+  dragDisabled: boolean;
 }
 
 export function GridItem({
   children,
   style,
   className,
+  dragDisabled,
   ...other
 }: GridItemProps) {
   const context = React.useContext(GridItemContext);
@@ -27,7 +29,6 @@ export function GridItem({
 
   const {
     top,
-    disableDrag,
     endTraverse,
     onStart,
     mountWithTraverseTarget,
@@ -38,6 +39,11 @@ export function GridItem({
     grid,
     dragging: isDragging
   } = context;
+
+  let { disableDrag } = context;
+  if (!!dragDisabled) {
+    disableDrag = dragDisabled
+  }
 
   const { columnWidth, rowHeight } = grid;
   const dragging = React.useRef(false);
