@@ -457,15 +457,15 @@ function move(source, destination, droppableSource, droppableDestination) {
 }
 
 function GridItem(_a) {
-    var children = _a.children, style = _a.style, className = _a.className, dragDisabled = _a.dragDisabled, other = tslib.__rest(_a, ["children", "style", "className", "dragDisabled"]);
+    var children = _a.children, style = _a.style, className = _a.className, locked = _a.locked, other = tslib.__rest(_a, ["children", "style", "className", "locked"]);
     var context = React.useContext(GridItemContext);
     if (!context) {
         throw Error("Unable to find GridItem context. Please ensure that GridItem is used as a child of GridDropZone");
     }
     var top = context.top, endTraverse = context.endTraverse, onStart = context.onStart, mountWithTraverseTarget = context.mountWithTraverseTarget, left = context.left, i = context.i, onMove = context.onMove, onEnd = context.onEnd, grid = context.grid, isDragging = context.dragging;
     var disableDrag = context.disableDrag;
-    if (!!dragDisabled) {
-        disableDrag = dragDisabled;
+    if (!!locked) {
+        disableDrag = locked;
     }
     var columnWidth = grid.columnWidth, rowHeight = grid.rowHeight;
     var dragging = React.useRef(false);
@@ -494,6 +494,9 @@ function GridItem(_a) {
     }), 2), styles = _b[0], set = _b[1];
     // handle move updates imperatively
     function handleMove(state, e) {
+        if (locked) {
+            return;
+        }
         var x = startCoords.current[0] + state.delta[0];
         var y = startCoords.current[1] + state.delta[1];
         set({
